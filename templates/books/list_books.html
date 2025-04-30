@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Books List</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> <!-- Font Awesome for the icon -->
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #f4f6f8;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 100vh;
+        }
+
+        /* Navbar */
+        .navbar {
+            background-color: #1f2d3d;
+            padding: 15px 30px;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            margin-left: 20px;
+            font-weight: 500;
+        }
+
+        .navbar a:hover {
+            text-decoration: underline;
+        }
+
+        .navbar .search-box {
+            display: flex;
+            align-items: center;
+        }
+
+        .navbar .search-box input[type="text"] {
+            padding: 8px;
+            font-size: 1em;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            width: 200px;
+            margin-right: 10px;
+        }
+
+        .navbar .search-box button {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5em;
+            cursor: pointer;
+        }
+
+        .navbar .search-box button:hover {
+            color: #304c61;
+        }
+
+        /* Main Content */
+        .main-container {
+            padding: 20px;
+            text-align: center;
+            background-color: #ffffff;
+            margin: 40px auto;
+            max-width: 1100px;
+            border-radius: 12px;
+            box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.07);
+            flex-grow: 1;
+        }
+
+        h1 {
+            color: #1f2d3d;
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+
+        /* Table Styles */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #1f2d3d;
+            color: white;
+            font-weight: 600;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f4f6f8;
+        }
+
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        .button-link {
+            padding: 6px 12px;
+            border-radius: 8px;
+            background-color: #1f2d3d;
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            margin-left: 10px;
+            font-size: 0.9em;
+            max-width: 120px;
+            text-align: center;
+            display: inline-block;
+            white-space: nowrap;
+            display: flex;
+            justify-content: center;
+            margin-top:20px;
+           
+        }
+
+        .button-link:hover {
+            background-color: #304c61;
+        }
+
+        .book-image {
+            max-width: 100px;
+            height: auto;
+            margin-right: 15px;
+        }
+
+        .buy-button {
+            background-color: #dc3545;
+        }
+
+        .buy-button:hover {
+            background-color: rgb(204, 40, 57);
+        }
+
+        .cart-button {
+            background-color: #4caf50;
+        }
+
+        .cart-button:hover {
+            background-color: #45a049;
+        }
+
+        .description {
+            font-size: 0.9em;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        /* Footer */
+        footer {
+            background-color: #1f2d3d;
+            color: white;
+            text-align: center;
+            padding: 15px 0;
+            font-size: 0.95em;
+        }
+
+        /* For button alignment in actions column */
+        .actions-buttons {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 1.8em;
+            }
+
+            .main-container {
+                padding: 15px;
+                max-width: 90%;
+            }
+
+            table {
+                font-size: 0.9em;
+            }
+
+            .actions-buttons {
+                justify-content: center;
+            }
+        }
+     .modal {
+        display: none;
+        position: fixed;
+        z-index: 999;
+        padding-top: 80px;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0,0,0,0.8);
+    }
+
+    .modal-content {
+        margin: auto;
+        display: block;
+        max-width: 90%;
+        max-height: 80%;
+        border-radius: 8px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
+
+    .close {
+        position: absolute;
+        top: 20px;
+        right: 35px;
+        color: #fff;
+        font-size: 40px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    .close:hover {
+        color: #bbb;
+    }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <div class="navbar">
+        <div><strong>🧩 MyBookApp</strong></div>
+        <div style="display: flex; align-items: center;">
+            <!-- Search Form -->
+            <form action="/books/list-view" method="get" style="display: flex; align-items: center;">
+                <input type="text" name="search" placeholder="Search books by title..." value="{{ search_query or '' }}" style="padding: 8px; font-size: 1em; border-radius: 8px; border: 1px solid #ddd; width: 200px; margin-right: 10px;">
+                <button type="submit" style="background: none; border: none; color: white; font-size: 1.5em; cursor: pointer;">
+                    <i class="fas fa-search"></i>
+                </button>
+            </form>
+
+
+            <!-- Navigation Links -->
+            <a href="/dashboard">Profile</a>
+            <a href="/books/list-view">View Books</a>
+            <a href="/books/add">Add Book</a>
+            <a href="/logout">Logout</a>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-container">
+        <h1>Books List</h1>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Image</th>
+                    <th>Title</th>
+                    <th>Author</th>
+                    <th>Price</th>
+                    <th>Description</th>
+                    <th>Actions</th>
+               
+                </tr>
+            </thead>
+            <tbody>
+                {% for book in books %}
+                <tr>
+                    <td> 
+                        {% if book.image %}
+                        <img src="{{ book.image }}" alt="Book Image" style="max-width: 100px;">
+                        {% else %}
+                        <span>No image available</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ book.title }}</td>
+                    <td>{{ book.author }}</td>
+                    <td>₹{{ book.price }}</td>
+                    <td>{{ book.description }}</td>
+         
+                    <td>
+                        <a href="/books/edit/{{ book.id }}" class="button-link">Edit</a>
+                        <a href="/books/delete/{{ book.id }}" class="button-link">Delete</a>
+                    </td>
+                  
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <br>
+        <a href="/books/add" class="button-link">Add New Book</a>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        &copy; 2025 MyBookApp. All Rights Reserved.
+    </footer>
+</body>
+</html>
